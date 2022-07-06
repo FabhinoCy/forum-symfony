@@ -9,8 +9,15 @@
         <p>Vous êtes connectés</p>
         <p>Adresse email : {{ app.user.email }}</p>
         <a href={{ path('app_logout') }}>Se déconnecter</a>
+        <a href={{ path('app_article') }}>Ajouter un article</a>
+
+        {% for article in articles %}
+            <p><b>{{ article.id }}</b> - {{ article.titre }} - {{ article.user.id }}</p>
+        {% endfor %}
+
         {% else %}
             <a href={{ path('app_register') }}>S'inscrire</a>
             <a href={{ path('app_login') }}>Se connecter</a>
     {% endif %}
+
 {% endblock %}
