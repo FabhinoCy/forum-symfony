@@ -12,7 +12,8 @@
         <a href={{ path('app_article') }}>Ajouter un article</a>
 
         {% for article in articles %}
-            <p><b>{{ article.id }}</b> - {{ article.titre }} - {{ article.user.id }}</p>
+            <p><b>{{ article.id }}</b> - {{ article.titre }} / posté par {{ article.user.email }}</p>
+            <a href="{{ path('article_delete', {id: article.id}) }}">Supprimer</a>
         {% endfor %}
 
         {% else %}

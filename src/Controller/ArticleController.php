@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Article;
 use App\Form\ArticleType;
+use App\Repository\ArticleRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -32,5 +33,14 @@ class ArticleController extends AbstractController
         return $this->render('article/index.html.twig', [
             "form" => $form->createView()
         ]);
+    }
+
+    #[Route('/article/suppression/{id}', 'article_delete', methods: ['GET'])]
+    public function delete(EntityManagerInterface $entityManager, Article $article): Response
+    {
+        $entityManager->remove($article);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_home');
     }
 }
