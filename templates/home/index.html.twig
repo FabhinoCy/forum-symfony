@@ -22,15 +22,10 @@
                 <a href="{{ path('commentaire_create', {id: article.id}) }}">Ajouter un commentaire</a>
 
                 {% if article.commentaires|length != 0 %}
-                    <div>
-                        {% if article.commentaires|length == 1 %}
-                            <p>Nombre de commentaire : {{ article.commentaires|length }}</p>
-                            {% else %}
-                                <p>Nombre de commentaires : {{ article.commentaires|length }}</p>
-                        {% endif %}
-                    </div>
+
                     {% for commentaire in article.commentaires %}
                         <p><b>COMMENTAIRE : {{ article.id }} / {{ commentaire.objet }} - {{ commentaire.contenu }}</b></p>
+                        <a href={{ path('commentaire_answer', {id: commentaire.id}) }}>Répondre au commentaire</a>
                     {% endfor %}
 
                 {% else %}

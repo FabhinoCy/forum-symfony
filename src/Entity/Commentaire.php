@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\CommentaireRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CommentaireRepository::class)]
@@ -24,6 +26,17 @@ class Commentaire
 
     #[ORM\ManyToOne(targetEntity: Article::class, inversedBy: 'commentaires')]
     private $article;
+
+    #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'parent')]
+    private $commentaire;
+
+    #[ORM\OneToMany(mappedBy: 'commentaire', targetEntity: self::class)]
+    private $parent;
+
+    public function __construct()
+    {
+        $this->parent = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -74,6 +87,48 @@ class Commentaire
     public function setArticle(?Article $article): self
     {
         $this->article = $article;
+
+        return $this;
+    }
+
+    public function getCommentaire(): ?self
+    {
+        return $this->commentaire;
+    }
+
+    public function setCommentaire(?self $commentaire): self
+    {
+        $this->commentaire = $commentaire;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, self>
+     */
+    public function getParent(): Collection
+    {
+        return $this->parent;
+    }
+
+    public function addParent(self $parent): self
+    {
+        if (!$this->parent->contains($parent)) {
+            $this->parent[] = $parent;
+            $parent->setCommentaire($this);
+        }
+
+        return $this;
+    }
+
+    public function removeParent(self $parent): self
+    {
+        if ($this->parent->removeElement($parent)) {
+            // set the owning side to null (unless already changed)
+            if ($parent->getCommentaire() === $this) {
+                $parent->setCommentaire(null);
+            }
+        }
 
         return $this;
     }
