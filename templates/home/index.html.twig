@@ -2,18 +2,42 @@
 
 {% block title %}Accueil{% endblock %}
 
+{% block stylesheets %}
+    <link rel="stylesheet" href={{ asset('css/base.css') }}>
+{% endblock %}
+
 {% block body %}
-    <p class="title">Accueil</p>
+    <h1 class="title">Accueil</h1>
 
     {% if app.user %}
-        <p>Vous êtes connectés</p>
-        <p>Adresse email : {{ app.user.email }}</p>
+
+        <p>Bonjour {{ app.user.email }}</p>
         <a href={{ path('app_logout') }}>Se déconnecter</a>
         <a href={{ path('app_article') }}>Ajouter un article</a>
 
         {% for article in articles %}
-            <p><b>{{ article.id }}</b> - {{ article.titre }} / posté par {{ article.user.email }}</p>
-            <a href="{{ path('article_delete', {id: article.id}) }}">Supprimer</a>
+            <div class="article">
+                <p><b>ARTICLE : {{ article.id }}</b> - {{ article.titre }} / posté par {{ article.user.email }}</p>
+                <a href="{{ path('article_delete', {id: article.id}) }}">Supprimer</a>
+                <a href="{{ path('commentaire_create', {id: article.id}) }}">Ajouter un commentaire</a>
+
+                {% if article.commentaires|length != 0 %}
+                    <div>
+                        {% if article.commentaires|length == 1 %}
+                            <p>Nombre de commentaire : {{ article.commentaires|length }}</p>
+                            {% else %}
+                                <p>Nombre de commentaires : {{ article.commentaires|length }}</p>
+                        {% endif %}
+                    </div>
+                    {% for commentaire in article.commentaires %}
+                        <p><b>COMMENTAIRE : {{ article.id }} / {{ commentaire.objet }} - {{ commentaire.contenu }}</b></p>
+                    {% endfor %}
+
+                {% else %}
+                    <p>Aucun commentaire</p>
+                {% endif %}
+            </div>
+
         {% endfor %}
 
         {% else %}
